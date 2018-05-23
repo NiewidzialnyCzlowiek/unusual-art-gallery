@@ -12,6 +12,9 @@ include_directories(${PROJECT_SOURCE_DIR}/glm/)
 link_directories(${PROJECT_SOURCE_DIR}/glew/lib)
 link_directories(${PROJECT_SOURCE_DIR}/glfw/lib)
 
-add_executable(UnusualArtGallery main.cpp)
+add_executable(UnusualArtGallery main.cpp
+        Camera.cpp Camera.h
+        SimulatorEngine.cpp SimulatorEngine.h
+        )
 
 target_link_libraries(UnusualArtGallery glew32s glfw3 opengl32 gdi32 glu32)
