@@ -29,16 +29,22 @@ void Camera::changePosition(float deltaTime) {
     x1 = static_cast<float>(x);
     y1 = static_cast<float>(y);
 
-    glfwSetCursorPos(SimulatorEngine::window,engine->getWidth() / 2,engine->getHeight() / 2);
+    if(glfwGetKey(SimulatorEngine::window,GLFW_KEY_X) == 1){
+        x1 = engine->getWidth() / 2;
+        y1 = engine->getHeight() / 2;
+    }
+    else {
+        glfwSetCursorPos(SimulatorEngine::window, engine->getWidth() / 2, engine->getHeight() / 2);
+    }
 
-    V = lookAt(vec3(0,0,0),vec3(0,0,1),vec3(0,1,0));
+    V = lookAt(vec3(0, 0, 0), vec3(0, 0, 1), vec3(0, 1, 0));
     x1 = (x1 - engine->getWidth() / 2);
-    x1 = x1/750;
+    x1 = x1 / 750;
     y1 = (y1 - engine->getHeight() / 2);
     y1 = y1 / 750;
 
     if (fullAngleY > 0.3 && y1 > 0)y1 = 0;
-    if(fullAngleY < -1 && y1 < 0)y1 = 0;
+    if (fullAngleY < -1 && y1 < 0)y1 = 0;
     fullAngleX+= x1;
     fullAngleY+= y1;
 
