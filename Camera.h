@@ -26,7 +26,8 @@ public:
     void changePosition(float deltaTime);
     const mat4 &getV() const;
     void setV(const mat4 &V);
-
+    vec3 getPosition();
+    void setPosition(vec3 pos);
 
 };
 

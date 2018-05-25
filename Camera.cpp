@@ -18,18 +18,18 @@ Camera::Camera(SimulatorEngine &engine1) {
 }
 
 void Camera::changePosition(float deltaTime) {
-    int direction = 0,side = 0;
-    if(glfwGetKey(SimulatorEngine::window,GLFW_KEY_W) == 1)direction = 1;
-    else if(glfwGetKey(SimulatorEngine::window,GLFW_KEY_S) == 1)direction = -1;
-    if(glfwGetKey(SimulatorEngine::window,GLFW_KEY_A) == 1)side = -1;
-    else if(glfwGetKey(SimulatorEngine::window,GLFW_KEY_D) == 1)side = 1;
+    int direction = 0, side = 0;
+    if(glfwGetKey(engine->getWindowPtr(),GLFW_KEY_W) == 1)direction = 1;
+    else if(glfwGetKey(engine->getWindowPtr(),GLFW_KEY_S) == 1)direction = -1;
+    if(glfwGetKey(engine->getWindowPtr(),GLFW_KEY_A) == 1)side = -1;
+    else if(glfwGetKey(engine->getWindowPtr(),GLFW_KEY_D) == 1)side = 1;
     double x,y;
     float x1,y1;
-    glfwGetCursorPos(SimulatorEngine::window,&x,&y);
+    glfwGetCursorPos(engine->getWindowPtr(),&x,&y);
     x1 = static_cast<float>(x);
     y1 = static_cast<float>(y);
 
-    glfwSetCursorPos(SimulatorEngine::window,engine->getWidth() / 2,engine->getHeight() / 2);
+    glfwSetCursorPos(engine->getWindowPtr(),engine->getWidth() / 2,engine->getHeight() / 2);
 
     V = lookAt(vec3(0,0,0),vec3(0,0,1),vec3(0,1,0));
     x1 = (x1 - engine->getWidth() / 2);
@@ -69,4 +69,12 @@ const mat4 &Camera::getV() const {
 
 void Camera::setV(const mat4 &V) {
     Camera::V = V;
+}
+
+vec3 Camera::getPosition() {
+    return position;
+}
+
+void Camera::setPosition(vec3 pos) {
+    position = pos;
 }
