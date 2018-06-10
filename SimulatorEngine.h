@@ -38,7 +38,7 @@ public:
     bool initialize();
     bool initialize(int windowWidth, int windowHeight, const string &windowTitle);
     void finalize();
-    void drawModel(Model &model, glm::mat4 V);
+    void drawModel(Model &model, glm::mat4 V, glm::vec3 cameraPos);
 };
 
 #endif //CPPTEST_SIMULATORENGINE_H

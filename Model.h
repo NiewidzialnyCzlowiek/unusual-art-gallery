@@ -16,7 +16,7 @@ private:
     vector<glm::vec4> vertices;
     vector<glm::vec2> uvs;
     vector<glm::vec4> normals;
-    ShaderProgram shader;
+    ShaderProgram *shader;
     GLuint vao;
     GLuint vboVertices; //Uchwyt na bufor VBO przechowujący tablicę współrzędnych wierzchołków
     GLuint vboColors;  //Uchwyt na bufor VBO przechowujący tablicę kolorów
@@ -42,7 +42,9 @@ public:
 
     vector<glm::vec4> & getNormals();
 
-    ShaderProgram & getShader();
+    ShaderProgram * getShader();
+
+    void setShader(ShaderProgram * shaderToSet);
 
     GLuint getVao();
 

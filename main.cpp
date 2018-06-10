@@ -21,7 +21,7 @@ int main()
         while (!glfwWindowShouldClose(engine.getWindow())) {
             camera.changePosition(float(glfwGetTime()));
             glfwSetTime(0);
-            engine.drawModel(house, camera.getV());
+            engine.drawModel(house, camera.getV(), camera.getPosition());
             glfwPollEvents();
         }
     }

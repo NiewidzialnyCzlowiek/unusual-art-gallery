@@ -3,6 +3,7 @@
 
 Model::Model() {
     loadedToGraphicsMemory = false;
+    shader = nullptr;
 }
 
 Model::~Model() {
@@ -11,6 +12,9 @@ Model::~Model() {
         glDeleteBuffers(1,&vboVertices);
         glDeleteBuffers(1,&vboColors);
         glDeleteBuffers(1,&vboNormals);
+    }
+    if(shader->isInitialized()) {
+        delete shader;
     }
 }
 
@@ -97,8 +101,8 @@ GLuint Model::makeBuffer(void *data, int vertexCount, int vertexSize) {
 }
 
 void Model::assignVBOtoAttribute(const char* attributeName, GLuint bufVBO, int vertexSize) {
-	if(shader.isInitialized()) {
-        GLuint location = shader.getAttribLocation(attributeName);
+	if(shader->isInitialized()) {
+        GLuint location = shader->getAttribLocation(attributeName);
         glBindBuffer(GL_ARRAY_BUFFER, bufVBO);
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL);
@@ -122,7 +126,10 @@ void Model::initializeAndLoadToGraphicsCard() {
 }
 
 void Model::loadShaders(const char* vertexShaderFile,const char* geometryShaderFile,const char* fragmentShaderFile) {
-    shader.load(vertexShaderFile, geometryShaderFile, fragmentShaderFile);
+    if(shader == nullptr) {
+        shader = new ShaderProgram();
+    }
+    shader->load(vertexShaderFile, geometryShaderFile, fragmentShaderFile);
 }
 
 vector<glm::vec4> &Model::getVertices() {
@@ -137,8 +144,12 @@ vector<glm::vec4> &Model::getNormals() {
     return normals;
 }
 
-ShaderProgram &Model::getShader() {
+ShaderProgram * Model::getShader() {
     return shader;
+}
+
+void Model::setShader(ShaderProgram * shaderToSet) {
+    shader = shaderToSet;
 }
 
 GLuint Model::getVao() {

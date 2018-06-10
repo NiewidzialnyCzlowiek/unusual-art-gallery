@@ -49,16 +49,16 @@ void SimulatorEngine::initializeOpenGL() {
     glfwSwapBuffers(window);
 }
 
-void SimulatorEngine::drawModel(Model & model, glm::mat4 V) {
+void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos) {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glm::mat4 P = glm::perspective(50.f * 3.14f / 180.f, aspectRatio, 0.01f, 50.0f);
     glm::mat4 M = glm::mat4(1.0f);
     M = glm::scale(M, glm::vec3(0.01f,0.01f,0.01f));
 
-    model.getShader().use();
-    glUniformMatrix4fv(model.getShader().getUniformLocation("P"),1, GL_FALSE, glm::value_ptr(P));
-    glUniformMatrix4fv(model.getShader().getUniformLocation("V"),1, GL_FALSE, glm::value_ptr(V));
-    glUniformMatrix4fv(model.getShader().getUniformLocation("M"),1, GL_FALSE, glm::value_ptr(M));
+    model.getShader()->use();
+    glUniformMatrix4fv(model.getShader()->getUniformLocation("P"),1, GL_FALSE, glm::value_ptr(P));
+    glUniformMatrix4fv(model.getShader()->getUniformLocation("V"),1, GL_FALSE, glm::value_ptr(V));
+    glUniformMatrix4fv(model.getShader()->getUniformLocation("M"),1, GL_FALSE, glm::value_ptr(M));
 
     glBindVertexArray(model.getVao());
     glDrawArrays(GL_TRIANGLES,0,model.getVertices().size());
