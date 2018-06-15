@@ -16,6 +16,8 @@ private:
     vector<glm::vec4> vertices;
     vector<glm::vec2> uvs;
     vector<glm::vec4> normals;
+    glm::vec3 position;
+    glm::vec3 scale;
     ShaderProgram *shader;
     GLuint vao;
     GLuint vboVertices; //Uchwyt na bufor VBO przechowujący tablicę współrzędnych wierzchołków
@@ -53,7 +55,15 @@ public:
     GLuint getVboColors();
 
     GLuint getVboNormals();
-       
+
+    const glm::vec3 &getPosition() const;
+
+    void setPosition(const glm::vec3 &position);
+
+    const glm::vec3 &getScale() const;
+
+    void setScale(const glm::vec3 &scale);
+
 };
 
 #endif //UNUSUALARTGALLERY_MODEL_H

@@ -13,7 +13,7 @@ Model::~Model() {
         glDeleteBuffers(1,&vboColors);
         glDeleteBuffers(1,&vboNormals);
     }
-    if(shader->isInitialized()) {
+    if((shader != nullptr) && shader->isInitialized()) {
         delete shader;
     }
 }
@@ -25,7 +25,7 @@ bool Model::loadFromOBJFile(const string &path) {
     vector<glm::vec3> temp_normals;
     bool loadingUvs = false;
     FILE *file = fopen(path.c_str(), "r");
-    if (file == NULL) {
+    if (file == nullptr) {
         return false;
     }
     int res = 65;
@@ -46,7 +46,7 @@ bool Model::loadFromOBJFile(const string &path) {
             fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
             temp_normals.push_back(normal);
         } else if (strcmp(lineHeader, "f") == 0) {
-            std::string vertex1, vertex2, vertex3;
+            // std::string vertex1, vertex2, vertex3;
             unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
             if(loadingUvs) {
                 int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0],
@@ -78,14 +78,18 @@ bool Model::loadFromOBJFile(const string &path) {
         }
     }
     for (unsigned int vertexIndex : vertexIndices) {
-        glm::vec4 vertex = glm::vec4(temp_vertices[vertexIndex - 1].x,temp_vertices[vertexIndex - 1].y,temp_vertices[vertexIndex - 1].z, 1.f);
-        glm::vec4 normal = glm::vec4(temp_normals[vertexIndex - 1].x,temp_normals[vertexIndex - 1].y,temp_normals[vertexIndex - 1].z, 0.f);
-        if(loadingUvs) {
-            glm::vec2 uv = temp_uvs[vertexIndex - 1];
+        glm::vec4 vertex = glm::vec4(temp_vertices[vertexIndex - 1].x,temp_vertices[vertexIndex - 1].y,temp_vertices[vertexIndex - 1].z, 1.f);        
+        vertices.push_back(vertex);
+    }
+    for (unsigned int normalIndex : normalIndices) {
+        glm::vec4 normal = glm::vec4(temp_normals[normalIndex - 1].x,temp_normals[normalIndex - 1].y,temp_normals[normalIndex - 1].z, 0.f);
+        normals.push_back(normal);
+    }
+    if(loadingUvs) {
+        for (unsigned int uvIndex : uvIndices) {
+            glm::vec2 uv = glm::vec2(temp_uvs[uvIndex - 1].x, temp_uvs[uvIndex - 1].y);
             uvs.push_back(uv);
         }
-        vertices.push_back(vertex);
-        normals.push_back(normal);
     }
     return true;
 }
@@ -166,4 +170,20 @@ GLuint Model::getVboColors() {
 
 GLuint Model::getVboNormals() {
     return vboNormals;
+}
+
+const glm::vec3 &Model::getPosition() const {
+    return position;
+}
+
+void Model::setPosition(const glm::vec3 &position) {
+    Model::position = position;
+}
+
+const glm::vec3 &Model::getScale() const {
+    return scale;
+}
+
+void Model::setScale(const glm::vec3 &scale) {
+    Model::scale = scale;
 }
