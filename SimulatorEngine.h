@@ -20,6 +20,11 @@ private:
     int width;
     int height;
     GLFWwindow * window;
+    float aspectRatio;
+    void initializeOpenGL();
+    vector<Model*> models;
+    glm::mat4 P;
+
 public:
     GLFWwindow *getWindow() const;
 
@@ -29,16 +34,19 @@ public:
 
     void setAspectRatio(float aspectRatio);
 
-private:
-    float aspectRatio;
-    void initializeOpenGL();
-public:
-
     SimulatorEngine();
+
     bool initialize();
+
     bool initialize(int windowWidth, int windowHeight, const string &windowTitle);
+
     void finalize();
+
     void drawModel(Model &model, glm::mat4 V, glm::vec3 cameraPos);
+
+    void drawModels(glm::mat4 V, glm::vec3 cameraPos);
+
+    void addModel(Model * model);
 };
 
 #endif //CPPTEST_SIMULATORENGINE_H
