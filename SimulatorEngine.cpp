@@ -99,6 +99,9 @@ float SimulatorEngine::getAspectRatio() const {
 
 void SimulatorEngine::setAspectRatio(float aspectRatio) {
     SimulatorEngine::aspectRatio = aspectRatio;
+    if(aspectRatio != 0) {
+        P = glm::perspective(50.f * 3.14f / 180.f, aspectRatio, 0.01f, 50.0f);
+    }
 }
 
 void SimulatorEngine::drawModels(glm::mat4 V, glm::vec3 cameraPos) {

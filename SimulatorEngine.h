@@ -7,15 +7,6 @@
 using namespace std;
 
 class SimulatorEngine {
-public:
-    int getWidth() const;
-
-    void setWidth(int width);
-
-    int getHeight() const;
-
-    void setHeight(int height);
-
 private:
     int width;
     int height;
@@ -47,6 +38,14 @@ public:
     void drawModels(glm::mat4 V, glm::vec3 cameraPos);
 
     void addModel(Model * model);
+
+    int getWidth() const;
+
+    void setWidth(int width);
+
+    int getHeight() const;
+
+    void setHeight(int height);
 };
 
 #endif //CPPTEST_SIMULATORENGINE_H
