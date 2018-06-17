@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "ShaderProgram.h"
+#include "Texture.h"
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include <gtc/type_ptr.hpp>
@@ -19,12 +20,16 @@ private:
     glm::vec3 position;
     glm::vec3 scale;
     ShaderProgram *shader;
+    Texture *texture;
     GLuint vao;
     GLuint vboVertices; //Uchwyt na bufor VBO przechowujący tablicę współrzędnych wierzchołków
-    GLuint vboColors;  //Uchwyt na bufor VBO przechowujący tablicę kolorów
     GLuint vboNormals;
+    GLuint vboUvs;
+
     bool loadedToGraphicsMemory;
+    
     GLuint makeBuffer(void *data, int vertexCount, int vertexSize);
+    
     void assignVBOtoAttribute(const char* attributeName, GLuint bufVBO, int vertexSize);
     
 public:
@@ -48,11 +53,15 @@ public:
 
     void setShader(ShaderProgram * shaderToSet);
 
+    Texture * getTexture();
+
+    void setTexture(Texture * textureToSet);
+
     GLuint getVao();
 
     GLuint getVboVertices();
 
-    GLuint getVboColors();
+    GLuint getVboUvs();
 
     GLuint getVboNormals();
 

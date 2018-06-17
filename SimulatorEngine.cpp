@@ -51,7 +51,11 @@ void SimulatorEngine::initializeOpenGL() {
 }
 
 void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos) {
-    GLfloat range = 5.5f;
+    GLfloat range = 50.5f;
+    GLint useTextures = 0;
+    if(model.getTexture() != nullptr) {
+        useTextures = 1;
+    }
     glm::mat4 M = glm::mat4(1.0f);
     M = glm::translate(M, model.getPosition());
     M = glm::scale(M, model.getScale());
@@ -63,6 +67,16 @@ void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos)
     glUniform3fv(model.getShader()->getUniformLocation("playerPosition"),1, glm::value_ptr(cameraPos));
     glUniform1fv(model.getShader()->getUniformLocation("lightRange"),1, &range);
     glUniform3fv(model.getShader()->getUniformLocation("lightPosition"),1, glm::value_ptr(cameraPos));
+    glUniform1i(model.getShader()->getUniformLocation("colorTextureUnit"),0);
+	glUniform1i(model.getShader()->getUniformLocation("specularTextureUnit"),1);
+    glUniform1i(model.getShader()->getUniformLocation("useTextures"), useTextures);
+
+    if(useTextures != 0) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,model.getTexture()->getColorTexture());
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,model.getTexture()->getSpecularTexture());
+    }
 
     glBindVertexArray(model.getVao());
     glDrawArrays(GL_TRIANGLES,0,model.getVertices().size());

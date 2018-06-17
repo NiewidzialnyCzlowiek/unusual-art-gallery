@@ -4,13 +4,14 @@
 Model::Model() {
     loadedToGraphicsMemory = false;
     shader = nullptr;
+    texture = nullptr;
 }
 
 Model::~Model() {
     if(loadedToGraphicsMemory) {
         glDeleteVertexArrays(1,&vao);
         glDeleteBuffers(1,&vboVertices);
-        glDeleteBuffers(1,&vboColors);
+        glDeleteBuffers(1,&vboUvs);
         glDeleteBuffers(1,&vboNormals);
     }
     if((shader != nullptr) && shader->isInitialized()) {
@@ -91,6 +92,11 @@ bool Model::loadFromOBJFile(const string &path) {
             uvs.push_back(uv);
         }
     }
+    else {
+        for (unsigned int vertexIndex : vertexIndices) {
+            uvs.push_back(glm::vec2(0,0));
+        }
+    }
     return true;
 }
 
@@ -109,21 +115,21 @@ void Model::assignVBOtoAttribute(const char* attributeName, GLuint bufVBO, int v
         GLuint location = shader->getAttribLocation(attributeName);
         glBindBuffer(GL_ARRAY_BUFFER, bufVBO);
         glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL);
+        glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, nullptr);
     }
 }
 
 void Model::initializeAndLoadToGraphicsCard() {
 	vboVertices = makeBuffer(vertices.data(), vertices.size(), sizeof(float)*4);
-	vboColors = makeBuffer(normals.data(), vertices.size(), sizeof(float)*4);
 	vboNormals = makeBuffer(normals.data(), vertices.size(), sizeof(float)*4);
+    vboUvs = makeBuffer(uvs.data(), uvs.size(), sizeof(float)*2);
 
 	glGenVertexArrays(1,&vao);
 
 	glBindVertexArray(vao);
 	assignVBOtoAttribute("vertex", vboVertices, 4);
-	assignVBOtoAttribute("color", vboColors, 4);
 	assignVBOtoAttribute("normal", vboNormals, 4);
+    assignVBOtoAttribute("uv", vboUvs, 2); 
 	glBindVertexArray(0);
     
     loadedToGraphicsMemory = true;
@@ -156,6 +162,14 @@ void Model::setShader(ShaderProgram * shaderToSet) {
     shader = shaderToSet;
 }
 
+Texture * Model::getTexture() {
+    return texture;
+}
+
+void Model::setTexture(Texture * textureToSet) {
+    texture = textureToSet;
+}
+
 GLuint Model::getVao() {
     return vao;
 }
@@ -164,8 +178,8 @@ GLuint Model::getVboVertices() {
     return vboVertices;
 }
 
-GLuint Model::getVboColors() {
-    return vboColors;
+GLuint Model::getVboUvs() {
+    return vboUvs;
 }
 
 GLuint Model::getVboNormals() {
