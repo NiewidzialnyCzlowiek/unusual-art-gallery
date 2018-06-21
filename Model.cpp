@@ -5,6 +5,7 @@ Model::Model() {
     loadedToGraphicsMemory = false;
     shader = nullptr;
     texture = nullptr;
+    M = glm::mat4(1.f);
 }
 
 Model::~Model() {
@@ -214,6 +215,6 @@ const glm::mat4 &Model::getM() const {
     return Model::M;
 }
 
-void Model::setM(const glm::mat4 M) {
+void Model::setM(const glm::mat4 &M) {
     Model::M = M;
 }

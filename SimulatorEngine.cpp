@@ -41,6 +41,10 @@ bool SimulatorEngine::initialize(int windowWidth, int windowHeight, const string
 void SimulatorEngine::finalize() {
     glfwDestroyWindow(window);
     glfwTerminate();
+    for(auto model: models) {
+        if(model != nullptr)
+            delete model;
+    }
 }
 
 void SimulatorEngine::initializeOpenGL() {
@@ -56,9 +60,7 @@ void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos)
     if(model.getTexture() != nullptr) {
         useTextures = 1;
     }
-    glm::mat4 M = glm::mat4(1.0f);
-    M = glm::translate(M, model.getPosition());
-    M = glm::scale(M, model.getScale());
+    glm::mat4 M = model.getM();
 
     model.getShader()->use();
     glUniformMatrix4fv(model.getShader()->getUniformLocation("P"),1, GL_FALSE, glm::value_ptr(P));

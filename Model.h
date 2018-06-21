@@ -81,7 +81,7 @@ public:
 
     const glm::mat4 &getM() const;
 
-    void setM(const glm::mat4 M);
+    void setM(const glm::mat4 & M);
 
 };
 

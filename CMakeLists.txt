@@ -14,6 +14,7 @@ link_directories(${PROJECT_SOURCE_DIR}/glew/lib)
 link_directories(${PROJECT_SOURCE_DIR}/glfw/lib)
 
 add_executable(UnusualArtGallery main.cpp 
+        Setup.cpp
         Camera.cpp Camera.h
         ShaderProgram.h ShaderProgram.cpp
         Lodepng/lodepng.h Lodepng/lodepng.cpp
