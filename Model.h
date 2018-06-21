@@ -19,6 +19,8 @@ private:
     vector<glm::vec4> normals;
     glm::vec3 position;
     glm::vec3 scale;
+    glm::vec3 rotation;
+    glm::mat4 M;
     ShaderProgram *shader;
     Texture *texture;
     GLuint vao;
@@ -72,6 +74,14 @@ public:
     const glm::vec3 &getScale() const;
 
     void setScale(const glm::vec3 &scale);
+
+    const glm::vec3 &getRotation() const;
+
+    void setRotation(const glm::vec3 &rotation);
+
+    const glm::mat4 &getM() const;
+
+    void setM(const glm::mat4 M);
 
 };
 

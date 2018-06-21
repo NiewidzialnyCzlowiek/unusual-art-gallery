@@ -201,3 +201,19 @@ const glm::vec3 &Model::getScale() const {
 void Model::setScale(const glm::vec3 &scale) {
     Model::scale = scale;
 }
+
+const glm::vec3 &Model::getRotation() const {
+    return Model::rotation;
+}
+
+void Model::setRotation(const glm::vec3 &rotation) {
+    Model::rotation = rotation;
+}
+
+const glm::mat4 &Model::getM() const {
+    return Model::M;
+}
+
+void Model::setM(const glm::mat4 M) {
+    Model::M = M;
+}

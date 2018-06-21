@@ -18,12 +18,12 @@ out float lightIntensity;
 out vec2 intUv;
 
 void main() {
-    float dist = length(vec4(playerPosition.xyz,0) - M*vertex);
+    float dist = length(vec4(playerPosition,1) - M*vertex);
     lightIntensity = 1-dist/lightRange;
-    vec4 lp=vec4(lightPosition.xyz, 1); //Wspolrzedne swiatla w przestrzeni swiata
+    vec4 lp=vec4(lightPosition, 1);
     vec4 ppos=vec4(playerPosition, 1);
-    l=normalize(V*lp-V*M*vertex); //Wektor do swiatla w przestrzeni oka
-    n=normalize(V*M*normal); //Wektor normalny w wierzcholku w przestrzeni oka
+    l=normalize(V*lp-V*M*vertex);
+    n=normalize(V*M*normal);
     v=normalize(V*ppos-V*M*vertex); 
     gl_Position = P * V * M * vertex;
     intUv = uv;
