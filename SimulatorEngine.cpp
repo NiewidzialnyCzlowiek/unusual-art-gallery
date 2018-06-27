@@ -59,7 +59,7 @@ void SimulatorEngine::initializeOpenGL() {
 }
 
 void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos) {
-    GLfloat range = 200.5f;
+    GLfloat range = 30.5f;
     GLint useTextures = 0;
     if(model.getTexture() != nullptr) {
         useTextures = 1;

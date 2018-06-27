@@ -61,7 +61,7 @@ void Camera::changePosition(float deltaTime) {
     V=rotate(V,-fullAngleY,vec3(viewDirection[2],0,viewDirection[0]));
 
 
-    positionTest = kolizja(position,positionTest,viewDirection, direction, side, engine->getModels(),currentRoom,deltaTime);
+    // positionTest = checkInternalCollision(position,positionTest,viewDirection, direction, side, engine->getModels(),currentRoom,deltaTime);
 
 //    for(Model *m : engine->getModels()) {
 //        vec4 tab[3];
@@ -95,7 +95,7 @@ void Camera::setPosition(vec3 pos) {
     position = pos;
 }
 
-vec3 Camera::kolizja(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vector<Model *> models, int currentRoom, float delta) {
+vec3 Camera::checkInternalCollision(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vector<Model *> models, int currentRoom, float delta) {
     if((positionTest.r> - models[currentRoom]->getRoomZone()[0].r and positionTest.r< - models[currentRoom]->getRoomZone()[1].r and
          positionTest.b> - models[currentRoom]->getRoomZone()[1].b and positionTest.b< - models[currentRoom]->getRoomZone()[2].b)){
 
@@ -150,7 +150,7 @@ void Camera::setCurrentRoom(int currentRoom) {
     Camera::currentRoom = currentRoom;
 }
 
-vec3 Camera::kolizja2(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vec4 tab[3], float delta) {
+vec3 Camera::checkExternalCollision(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vec4 tab[3], float delta) {
     if(!(positionTest.r> - tab[0].r and positionTest.r< - tab[1].r and
         positionTest.b> - tab[1].b and positionTest.b< - tab[2].b)){
 

@@ -225,7 +225,7 @@ void Model::setM(const glm::mat4 &M) {
 
 
 }
-void Model::setWspolrzedne(glm::vec4 a, glm::vec4 b, glm::vec4 c) {
+void Model::setCollisionCoordinates(glm::vec4 a, glm::vec4 b, glm::vec4 c) {
     roomZone[0]=a;
     roomZone[1]=b;
     roomZone[2]=c;

@@ -84,7 +84,7 @@ public:
 
     void setM(const glm::mat4 & M);
 
-    void setWspolrzedne(glm::vec4 a, glm::vec4 b, glm::vec4 c );
+    void setCollisionCoordinates(glm::vec4 a, glm::vec4 b, glm::vec4 c );
 
     const glm::vec4 *getRoomZone() ;
 
