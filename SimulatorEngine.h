@@ -46,6 +46,8 @@ public:
     int getHeight() const;
 
     void setHeight(int height);
+
+    const vector<Model *> &getModels() const;
 };
 
 #endif //CPPTEST_SIMULATORENGINE_H

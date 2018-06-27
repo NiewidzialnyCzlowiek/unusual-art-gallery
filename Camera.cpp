@@ -8,12 +8,13 @@
 
 Camera::Camera(SimulatorEngine &engine1) {
     engine = &engine1;
-    position = vec3(0.f,-0.5f,0.f);
+    position = vec3(0.f,0.f,0.f);
     viewDirection = vec3(0.f,0.f,1.f);
     V = glm::lookAt(position, viewDirection, glm::vec3(0.f,1.f,0.f));
-    speed = 1;
+    speed = 2;
     fullAngleX = 0;
     fullAngleY = 0;
+    currentRoom = 0;
 
 }
 
@@ -42,21 +43,38 @@ void Camera::changePosition(float deltaTime) {
     fullAngleX+= x1;
     fullAngleY+= y1;
 
+    vec3 positionTest;
 
 
 
     viewDirection = mat3(rotate(mat4(1.f),x1,vec3(0,1,0))) * viewDirection;
 
-    position[0] = position[0] + (viewDirection[0] * speed * direction * deltaTime);
-    position[1] = position[1] + (viewDirection[1] * speed * direction * deltaTime);
-    position[2] = position[2] - (viewDirection[2] * speed * direction * deltaTime);
-    position[0] = position[0] + (viewDirection[2] * speed * side * deltaTime);
-    position[1] = position[1] + (viewDirection[1] * speed * side * deltaTime);
-    position[2] = position[2] + (viewDirection[0] * speed * side * deltaTime);
+    positionTest[0] = position[0] + (viewDirection[0] * speed * direction * deltaTime);
+    positionTest[1] = position[1] + (viewDirection[1] * speed * direction * deltaTime);
+    positionTest[2] = position[2] - (viewDirection[2] * speed * direction * deltaTime);
+    positionTest[0] = positionTest[0] + (viewDirection[2] * speed * side * deltaTime);
+    positionTest[1] = positionTest[1] + (viewDirection[1] * speed * side * deltaTime);
+    positionTest[2] = positionTest[2] + (viewDirection[0] * speed * side * deltaTime);
 
 
     V=rotate(V,fullAngleX,vec3(0,1,0));
     V=rotate(V,-fullAngleY,vec3(viewDirection[2],0,viewDirection[0]));
+
+
+    positionTest = kolizja(position,positionTest,viewDirection, direction, side, engine->getModels(),currentRoom,deltaTime);
+
+//    for(Model *m : engine->getModels()) {
+//        vec4 tab[3];
+//        tab[0] = m->getRoomZone()[0];
+//        tab[1] = m->getRoomZone()[1];
+//        tab[2] = m->getRoomZone()[2];
+//
+//        positionTest = kolizja2(position,positionTest,viewDirection, direction, side,tab,deltaTime);
+//
+//    }
+
+    position = positionTest;
+
     V=translate(V,position);
 
 }
@@ -76,3 +94,101 @@ vec3 Camera::getPosition() {
 void Camera::setPosition(vec3 pos) {
     position = pos;
 }
+
+vec3 Camera::kolizja(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vector<Model *> models, int currentRoom, float delta) {
+    if((positionTest.r> - models[currentRoom]->getRoomZone()[0].r and positionTest.r< - models[currentRoom]->getRoomZone()[1].r and
+         positionTest.b> - models[currentRoom]->getRoomZone()[1].b and positionTest.b< - models[currentRoom]->getRoomZone()[2].b)){
+
+
+        return positionTest;
+
+    }
+    else {
+        vec3 directionTest = viewdirection;
+        int i=0;
+            for(Model *m : models) {
+
+                if(positionTest.r> - m->getRoomZone()[0].r and positionTest.r< - m->getRoomZone()[1].r and
+                   positionTest.b> - m->getRoomZone()[1].b and positionTest.b< - m->getRoomZone()[2].b) {
+                    this->setCurrentRoom(i);
+                    return positionTest;}
+                    i++;
+                }
+        if(!( positionTest.b> - models[currentRoom]->getRoomZone()[1].b and positionTest.b< - models[currentRoom]->getRoomZone()[2].b)){
+            directionTest[2] = 0;
+
+        }
+        if(!(positionTest.r> - models[currentRoom]->getRoomZone()[0].r and positionTest.r< - models[currentRoom]->getRoomZone()[1].r)){
+            directionTest[0] = 0;
+
+
+        }
+
+
+        position[0] = position[0] + (directionTest[0] * speed * direction * delta);
+        position[1] = position[1] + (directionTest[1] * speed * direction * delta);
+        position[2] = position[2] - (directionTest[2] * speed * direction * delta);
+        directionTest=viewdirection;
+        if(!(positionTest.b> - models[currentRoom]->getRoomZone()[1].b and positionTest.b< - models[currentRoom]->getRoomZone()[2].b)){
+
+            directionTest[0]=0;
+        }
+        if(!(positionTest.r> - models[currentRoom]->getRoomZone()[0].r and positionTest.r< - models[currentRoom]->getRoomZone()[1].r)){
+            directionTest[2]=0;
+        }
+        position[0] = position[0] + (directionTest[2] * speed * side * delta);
+        position[1] = position[1] + (directionTest[1] * speed * side * delta);
+        position[2] = position[2] + (directionTest[0] * speed * side * delta);
+
+        return position;
+
+        }
+
+    }
+
+void Camera::setCurrentRoom(int currentRoom) {
+    Camera::currentRoom = currentRoom;
+}
+
+vec3 Camera::kolizja2(vec3 position,vec3 positionTest, vec3 viewdirection, int direction, int side,vec4 tab[3], float delta) {
+    if(!(positionTest.r> - tab[0].r and positionTest.r< - tab[1].r and
+        positionTest.b> - tab[1].b and positionTest.b< - tab[2].b)){
+
+
+        return positionTest;
+
+    }
+    else {
+
+        vec3 directionTest = viewdirection;
+
+        if(!( position.b> - tab[1].b and position.b< - tab[2].b)){
+            directionTest[2]=0;
+
+        }
+        if(!(position.r> - tab[0].r and position.r< - tab[1].r)){
+            directionTest[0]=0;
+        }
+
+
+        position[0] = position[0] + (directionTest[0] * speed * direction * delta);
+        position[1] = position[1] + (directionTest[1] * speed * direction * delta);
+        position[2] = position[2] - (directionTest[2] * speed * direction * delta);
+        directionTest=viewdirection;
+        if(!(position.b> - tab[1].b and position.b< - tab[2].b)){
+
+            directionTest[0]=0;
+        }
+        if(!(position.r> - tab[0].r and position.r< - tab[1].r)){
+            directionTest[2]=0;
+        }
+        position[0] = position[0] + (directionTest[2] * speed * side * delta);
+        position[1] = position[1] + (directionTest[1] * speed * side * delta);
+        position[2] = position[2] + (directionTest[0] * speed * side * delta);
+
+        return position;
+
+    }
+
+}
+

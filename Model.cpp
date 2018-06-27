@@ -217,4 +217,22 @@ const glm::mat4 &Model::getM() const {
 
 void Model::setM(const glm::mat4 &M) {
     Model::M = M;
+    glm::mat4 newM= M;
+    glm::vec4  vector = roomZone[0];
+    roomZone[0] = newM * roomZone[0];
+    roomZone[1] = newM * roomZone[1];
+    roomZone[2] = newM * roomZone[2];
+
+
 }
+void Model::setWspolrzedne(glm::vec4 a, glm::vec4 b, glm::vec4 c) {
+    roomZone[0]=a;
+    roomZone[1]=b;
+    roomZone[2]=c;
+
+}
+
+const glm::vec4 *Model::getRoomZone()  {
+    return roomZone;
+}
+

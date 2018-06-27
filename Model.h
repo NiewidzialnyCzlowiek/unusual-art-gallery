@@ -17,6 +17,7 @@ private:
     vector<glm::vec4> vertices;
     vector<glm::vec2> uvs;
     vector<glm::vec4> normals;
+    glm::vec4 roomZone[3];
     glm::vec3 position;
     glm::vec3 scale;
     glm::vec3 rotation;
@@ -82,6 +83,11 @@ public:
     const glm::mat4 &getM() const;
 
     void setM(const glm::mat4 & M);
+
+    void setWspolrzedne(glm::vec4 a, glm::vec4 b, glm::vec4 c );
+
+    const glm::vec4 *getRoomZone() ;
+
 
 };
 

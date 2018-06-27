@@ -47,6 +47,10 @@ void SimulatorEngine::finalize() {
     }
 }
 
+const vector<Model *> &SimulatorEngine::getModels() const {
+    return models;
+}
+
 void SimulatorEngine::initializeOpenGL() {
     glClearColor(0, 0, 0, 1);
     glEnable(GL_DEPTH_TEST);
@@ -55,7 +59,7 @@ void SimulatorEngine::initializeOpenGL() {
 }
 
 void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos) {
-    GLfloat range = 50.5f;
+    GLfloat range = 200.5f;
     GLint useTextures = 0;
     if(model.getTexture() != nullptr) {
         useTextures = 1;
