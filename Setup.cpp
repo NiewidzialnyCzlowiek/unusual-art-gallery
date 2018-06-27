@@ -32,6 +32,7 @@ public:
         corridor12->setShader(shader);
         corridor12->initializeAndLoadToGraphicsCard();
         M = glm::mat4(1.f);
+        M = glm::rotate(M, 3.14f/2, glm::vec3(0.f, 1, 0));
         M = glm::translate(M, glm::vec3(6.f, 0.f, 0.f));
         corridor12->setCollisionCoordinates(glm::vec4(2.f,0.f,1.f,1.f),glm::vec4(-2.f,0.f,1.f,1.f),glm::vec4(2.f,0.f,-1.f,1.f));
         corridor12->setM(M);
@@ -90,16 +91,12 @@ public:
         corridor14->setShader(shader);
         corridor14->initializeAndLoadToGraphicsCard();
         M = glm::mat4(1.f);
-        M = glm::rotate(M, 3.14f/2, glm::vec3(0.f, 1, 0));
         M = glm::translate(M, glm::vec3(6.f, 0.f, 0.f));
         corridor14->setCollisionCoordinates(glm::vec4(2.f,0.f,0.9f,1.f),glm::vec4(-2.f,0.f,0.9f,1.f),glm::vec4(2.f,0.f,-0.9f,1.f));
         corridor14->setM(M);
         corridor14->setTexture(roomtexture);
-        
 
         
-
-
         engine.addModel(room1);
         engine.addModel(corridor12);
         engine.addModel(room2);
@@ -108,6 +105,5 @@ public:
         engine.addModel(corridor34);
         engine.addModel(room4);
         engine.addModel(corridor14);
-
     }
 };
