@@ -18,6 +18,7 @@ void windowResize(GLFWwindow* window, int width, int height) {
 
 int main()
 {
+    srand(time(0));
     SimulatorEngine engine;
     Camera camera(engine);
     enginePointer = &engine;
@@ -28,6 +29,7 @@ int main()
         glfwSetTime(0);
         while (!glfwWindowShouldClose(engine.getWindow())) {
             camera.changePosition(float(glfwGetTime()));
+            engine.moveMovables(float(glfwGetTime()));
             glfwSetTime(0);
             engine.drawModels(camera.getV(), camera.getPosition());
             glfwPollEvents();

@@ -31,7 +31,7 @@ public:
     vec3 getPosition();
     void setPosition(vec3 pos);
     vec3 checkInternalCollision(vec3 positionTest ,vec3 position, vec3 viewdirection,int direction, int side, vector<Model*> models, int currentRoom,float delta);
-    vec3 checkExternalCollision(vec3 positionTest ,vec3 position, vec3 viewdirection,int direction, int side,vec4 tab[3] ,float delta);
+    vec3 checkExternalCollision(vec3 positionTest ,vec3 position, vec3 viewdirection,int direction, int side, Model * m ,float delta);
 
 };
 

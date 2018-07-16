@@ -6,6 +6,9 @@ Model::Model() {
     shader = nullptr;
     texture = nullptr;
     M = glm::mat4(1.f);
+    speed = 0.5;
+    currentRoom = 0;
+    angle = 0;
 }
 
 Model::~Model() {
@@ -217,22 +220,61 @@ const glm::mat4 &Model::getM() const {
 
 void Model::setM(const glm::mat4 &M) {
     Model::M = M;
-    glm::mat4 newM= M;
-    glm::vec4  vector = roomZone[0];
-    roomZone[0] = newM * roomZone[0];
-    roomZone[1] = newM * roomZone[1];
-    roomZone[2] = newM * roomZone[2];
-
-
 }
-void Model::setCollisionCoordinates(glm::vec4 a, glm::vec4 b, glm::vec4 c) {
+
+void Model::setCollisionCoordinates(glm::vec4 a, glm::vec4 b) {
     roomZone[0]=a;
     roomZone[1]=b;
-    roomZone[2]=c;
-
 }
 
 const glm::vec4 *Model::getRoomZone()  {
     return roomZone;
 }
 
+void Model::updateCollisionCoordinates() {
+    roomZone[0] = M * roomZone[0];
+    roomZone[1] = M * roomZone[1];
+}
+
+void Model::move(float deltaTime, vector<Model*> & models){
+    angle += float(rand()%10-5)/100;
+
+    glm::vec3 positionTest;
+    glm::vec3 direction = glm::mat3(rotate(glm::mat4(1.f),angle,glm::vec3(0,1,0))) * glm::vec3(1,0,0);
+    positionTest[0] = position[0] + (direction[0] * speed  * deltaTime);
+    positionTest[1] = position[1] + (direction[1] * speed  * deltaTime);
+    positionTest[2] = position[2] - (direction[2] * speed  * deltaTime);
+
+    if((positionTest.r>  models[currentRoom]->getRoomZone()[0].r and positionTest.r<  models[currentRoom]->getRoomZone()[1].r and
+         positionTest.b>  models[currentRoom]->getRoomZone()[0].b and positionTest.b<  models[currentRoom]->getRoomZone()[1].b)){
+        position = positionTest;
+
+    }
+    else {
+        glm::vec3 directionTest = direction;
+        int i=0;
+        if(!( positionTest.b>  models[currentRoom]->getRoomZone()[0].b and positionTest.b<  models[currentRoom]->getRoomZone()[1].b)){
+            directionTest[2] = 0;
+            angle += PI/4; 
+        }
+        if(!(positionTest.r>  models[currentRoom]->getRoomZone()[0].r and positionTest.r<  models[currentRoom]->getRoomZone()[1].r)){
+            directionTest[0] = 0;
+            angle += PI/4;
+        }
+        position[0] = position[0] + (directionTest[0] * speed * deltaTime);
+        position[1] = position[1] + (directionTest[1] * speed * deltaTime);
+        position[2] = position[2] - (directionTest[2] * speed * deltaTime);
+        for(Model *m : models) {
+            if(positionTest.r>  m->getRoomZone()[0].r and positionTest.r<  m->getRoomZone()[1].r and
+                positionTest.b>  m->getRoomZone()[0].b and positionTest.b<  m->getRoomZone()[1].b) {
+                currentRoom = i;
+                position = positionTest;
+            }
+            i++;
+        }
+    }
+    M = glm::translate(glm::mat4(1.f),position);
+    M = glm::mat4(1.f);
+    M = glm::rotate(M, angle, glm::vec3(0.f,1.f,0.f));
+    M = glm::translate(glm::mat4(1.f),position);
+}

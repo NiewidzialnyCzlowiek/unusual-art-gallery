@@ -15,6 +15,10 @@ bool SimulatorEngine::initialize(int windowWidth, int windowHeight, const string
     width=windowWidth;
     height=windowHeight;
     aspectRatio = static_cast<float>(windowWidth) / windowHeight;
+    lights[0] = glm::vec3(0,0.7,0);
+    lights[1] = glm::vec3(0,0.7,-12);
+    lights[2] = glm::vec3(12,0.7,-12);
+    lights[3] = glm::vec3(12,0.7,0);
     P = glm::perspective(50.f * 3.14f / 180.f, aspectRatio, 0.01f, 50.0f);
     if (!glfwInit()) {
         fprintf(stderr, "Cannot initialize GLFW library\n");
@@ -45,6 +49,14 @@ void SimulatorEngine::finalize() {
         if(model != nullptr)
             delete model;
     }
+    for(auto model: movables) {
+        if(model != nullptr)
+            delete model;
+    }
+    for(auto model: nonMovables) {
+        if(model != nullptr)
+            delete model;
+    }
 }
 
 const vector<Model *> &SimulatorEngine::getModels() const {
@@ -59,7 +71,7 @@ void SimulatorEngine::initializeOpenGL() {
 }
 
 void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos) {
-    GLfloat range = 30.5f;
+    GLfloat range = 8.f;
     GLint useTextures = 0;
     if(model.getTexture() != nullptr) {
         useTextures = 1;
@@ -72,7 +84,7 @@ void SimulatorEngine::drawModel(Model & model, glm::mat4 V, glm::vec3 cameraPos)
     glUniformMatrix4fv(model.getShader()->getUniformLocation("M"),1, GL_FALSE, glm::value_ptr(M));
     glUniform3fv(model.getShader()->getUniformLocation("playerPosition"),1, glm::value_ptr(cameraPos));
     glUniform1fv(model.getShader()->getUniformLocation("lightRange"),1, &range);
-    glUniform3fv(model.getShader()->getUniformLocation("lightPosition"),1, glm::value_ptr(cameraPos));
+    glUniform3fv(model.getShader()->getUniformLocation("lightPosition"),4, glm::value_ptr(lights[0]));
     glUniform1i(model.getShader()->getUniformLocation("colorTextureUnit"),0);
 	glUniform1i(model.getShader()->getUniformLocation("specularTextureUnit"),1);
     glUniform1i(model.getShader()->getUniformLocation("useTextures"), useTextures);
@@ -125,11 +137,14 @@ void SimulatorEngine::setAspectRatio(float aspectRatio) {
 }
 
 void SimulatorEngine::drawModels(glm::mat4 V, glm::vec3 cameraPos) {
-    cameraPos.x *= -1;
-    cameraPos.y *= -1;
-    cameraPos.z *= -1;
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     for(Model *m : models) {
+        drawModel(*m, V, cameraPos);
+    }
+    for(Model *m : movables) {
+        drawModel(*m, V, cameraPos);
+    }
+    for(Model *m : nonMovables) {
         drawModel(*m, V, cameraPos);
     }
     glfwSwapBuffers(window);
@@ -138,4 +153,27 @@ void SimulatorEngine::drawModels(glm::mat4 V, glm::vec3 cameraPos) {
 void SimulatorEngine::addModel(Model *model) {
     models.push_back(model);
 }
+
+void SimulatorEngine::addMovable(Model * movable) {
+    movables.push_back(movable);
+}
+
+void SimulatorEngine::addNonMovable(Model * nonMovable) {
+    nonMovables.push_back(nonMovable);
+}
+
+const vector<Model *> & SimulatorEngine::getMovables() const {
+    return movables;
+}
+
+void SimulatorEngine::moveMovables(float deltaTime) {
+    for(auto m : movables) {
+        m->move(deltaTime, models);
+    }
+}
+
+const vector<Model *> & SimulatorEngine::getNonMovables() const {
+    return nonMovables;
+}
+
 

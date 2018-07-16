@@ -14,7 +14,10 @@ private:
     float aspectRatio;
     void initializeOpenGL();
     vector<Model*> models;
+    vector<Model*> movables;
+    vector<Model*> nonMovables;
     glm::mat4 P;
+    glm::vec3 lights[4];
 
 public:
     GLFWwindow *getWindow() const;
@@ -48,6 +51,17 @@ public:
     void setHeight(int height);
 
     const vector<Model *> &getModels() const;
+
+    void addMovable(Model * movable);
+
+    const vector<Model *> &getMovables() const;
+
+    const vector<Model *> &getNonMovables() const;
+
+    void moveMovables(float deltaTime) ;
+
+    void addNonMovable(Model * nonMovable);
+
 };
 
 #endif //CPPTEST_SIMULATORENGINE_H

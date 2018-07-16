@@ -10,6 +10,10 @@
 #include <gtc/type_ptr.hpp>
 #include <detail/type_mat.hpp>
 #include <gtc/matrix_transform.hpp>
+#include <ctime>
+#include <cstdlib>
+
+const float PI = 3.141592653589793f;
 using namespace std;
 
 class Model {
@@ -17,8 +21,11 @@ private:
     vector<glm::vec4> vertices;
     vector<glm::vec2> uvs;
     vector<glm::vec4> normals;
-    glm::vec4 roomZone[3];
+    glm::vec4 roomZone[2];
     glm::vec3 position;
+    float angle;
+    float speed;
+    int currentRoom;
     glm::vec3 scale;
     glm::vec3 rotation;
     glm::mat4 M;
@@ -84,11 +91,15 @@ public:
 
     void setM(const glm::mat4 & M);
 
-    void setCollisionCoordinates(glm::vec4 a, glm::vec4 b, glm::vec4 c );
+    void setCollisionCoordinates(glm::vec4 a, glm::vec4 b);
 
     const glm::vec4 *getRoomZone() ;
 
+    void updateCollisionCoordinates();
 
+    void move(float deltaTime, vector<Model*> & models);
+
+    
 };
 
 #endif //UNUSUALARTGALLERY_MODEL_H

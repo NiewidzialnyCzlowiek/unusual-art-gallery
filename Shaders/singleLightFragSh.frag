@@ -22,10 +22,10 @@ void main() {
     vec4 ambient = la;
 
     float diffuseStrength = 0.5;
-    vec4 diffuse = max(dot(normal, light), 0.f) * ld;
+    vec4 diffuse = max(dot(normal, light), 0) * ld;
 
     vec4 refl = reflect(-light, normal);
-    vec4 specular = pow(max(dot(refl, viewer), 0.0f), 32) * ls;
+    vec4 specular = pow(max(dot(refl, viewer), 0), 32) * ls;
 
     if(useTextures == 0) {
         color = vec4((ambient
@@ -37,8 +37,8 @@ void main() {
     } else {
         color = vec4((ambient
             + diffuse * texture(colorTextureUnit, intUv)
-            // ).xyz
-            + specular * texture(specularTextureUnit, intUv)).xyz 
+            ).xyz
+            // + specular * texture(specularTextureUnit, intUv)).xyz 
             * lightIntensity
             , 1);
     }
